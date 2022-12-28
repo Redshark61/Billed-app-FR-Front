@@ -1,40 +1,39 @@
-import { formatDate } from '../app/format.js'
-import DashboardFormUI from '../views/DashboardFormUI.js'
-import BigBilledIcon from '../assets/svg/big_billed.js'
-import { ROUTES_PATH } from '../constants/routes.js'
-import USERS_TEST from '../constants/usersTest.js'
-import Logout from "./Logout.js"
+import { formatDate } from "../app/format.js";
+import DashboardFormUI from "../views/DashboardFormUI.js";
+import BigBilledIcon from "../assets/svg/big_billed.js";
+import { ROUTES_PATH } from "../constants/routes.js";
+import USERS_TEST from "../constants/usersTest.js";
+import Logout from "./Logout.js";
 
 export const filteredBills = (data, status) => {
-  return (data && data.length) ?
-    data.filter(bill => {
-      let selectCondition
+	return data && data.length
+		? data.filter((bill) => {
+				let selectCondition;
 
-      // in jest environment
-      if (typeof jest !== 'undefined') {
-        selectCondition = (bill.status === status)
-      }
-      /* istanbul ignore next */
-      else {
-        // in prod environment
-        const userEmail = JSON.parse(localStorage.getItem("user")).email
-        selectCondition =
-          (bill.status === status) &&
-          ![...USERS_TEST, userEmail].includes(bill.email)
-      }
+				// in jest environment
+				if (typeof jest !== "undefined") {
+					selectCondition = bill.status === status;
+				} else {
+					/* istanbul ignore next */
+					// in prod environment
+					const userEmail = JSON.parse(localStorage.getItem("user")).email;
+					selectCondition =
+						bill.status === status && ![...USERS_TEST, userEmail].includes(bill.email);
+				}
 
-      return selectCondition
-    }) : []
-}
+				return selectCondition;
+		  })
+		: [];
+};
 
 export const card = (bill) => {
-  const firstAndLastNames = bill.email.split('@')[0]
-  const firstName = firstAndLastNames.includes('.') ?
-    firstAndLastNames.split('.')[0] : ''
-  const lastName = firstAndLastNames.includes('.') ?
-  firstAndLastNames.split('.')[1] : firstAndLastNames
+	const firstAndLastNames = bill.email.split("@")[0];
+	const firstName = firstAndLastNames.includes(".") ? firstAndLastNames.split(".")[0] : "";
+	const lastName = firstAndLastNames.includes(".")
+		? firstAndLastNames.split(".")[1]
+		: firstAndLastNames;
 
-  return (`
+	return `
     <div class='bill-card' id='open-bill${bill.id}' data-testid='open-bill${bill.id}'>
       <div class='bill-card-name-container'>
         <div class='bill-card-name'> ${firstName} ${lastName} </div>
@@ -49,23 +48,23 @@ export const card = (bill) => {
         <span> ${bill.type} </span>
       </div>
     </div>
-  `)
-}
+  `;
+};
 
 export const cards = (bills) => {
-  return bills && bills.length ? bills.map(bill => card(bill)).join("") : ""
-}
+	return bills && bills.length ? bills.map((bill) => card(bill)).join("") : "";
+};
 
 export const getStatus = (index) => {
-  switch (index) {
-    case 1:
-      return "pending"
-    case 2:
-      return "accepted"
-    case 3:
-      return "refused"
-  }
-}
+	switch (index) {
+		case 1:
+			return "pending";
+		case 2:
+			return "accepted";
+		case 3:
+			return "refused";
+	}
+};
 
 export default class {
   constructor({ document, onNavigate, store, bills, localStorage }) {
