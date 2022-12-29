@@ -25,6 +25,7 @@ export default class NewBill {
 			console.log("Extension non autorisée");
 			e.target.value = "";
 			parent.setAttribute("data-error", "File extension not authorized");
+			parent.setAttribute("data-testid", "error-message");
 			parent.classList.add("error");
 			return;
 		}
