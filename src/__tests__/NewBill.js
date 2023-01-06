@@ -5,7 +5,7 @@
 import { screen, waitFor } from "@testing-library/dom";
 import { ROUTES_PATH } from "../constants/routes.js";
 import { localStorageMock } from "../__mocks__/localStorage.js";
-import mockStore from "../__mocks__/store.js";
+import mockStore, { resetList } from "../__mocks__/store.js";
 import router from "../app/Router.js";
 import { fireEvent } from "@testing-library/dom";
 
@@ -48,6 +48,10 @@ const setupForm = () => {
 };
 
 describe("Given I am connected as an employee", () => {
+	afterEach(() => {
+		console.log("afterEach");
+		resetList();
+	});
 	describe("When I am on NewBill Page", () => {
 		describe("When I fill in an input with a not authorized file", () => {
 			test("Then the file should not be uploaded", async () => {
@@ -84,7 +88,6 @@ describe("Given I am connected as an employee", () => {
 	});
 	describe("I'm on the Bill page and I add a new bill", () => {
 		test("There should be one more new bill", async () => {
-			// TODO
 			setupEmployee();
 			window.onNavigate(ROUTES_PATH.Bills);
 			let tbody = await waitFor(() => screen.getByTestId("tbody"));
